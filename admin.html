@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Grãos e Sabores</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --verde: #3F4021;
+      --verde-claro: #696b3a;
+      --creme: #f4f9f4;
+      --branco: #ffffff;
+      --cinza: #e8ede8;
+      --cinza2: #c8cdb0;
+      --texto: #1a1b0d;
+      --perigo: #b03030;
+      --perigo-claro: #f5dede;
+      --sucesso: #2d6a2d;
+      --sucesso-claro: #e0f0e0;
+      --aviso: #7a6010;
+      --aviso-claro: #fdf5d0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--creme);
+      color: var(--texto);
+      min-height: 100vh;
+    }
+
+    /* ── LOGIN ── */
+    #tela-login {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(ellipse at 30% 60%, #696b3a33 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, #3F402133 0%, transparent 55%),
+        var(--creme);
+    }
+
+    .login-card {
+      background: var(--branco);
+      border: 2px solid var(--verde-claro);
+      border-radius: 20px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 20px 60px rgba(63, 64, 33, .15);
+      text-align: center;
+    }
+
+    .login-card .logo {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--verde-claro);
+      margin-bottom: 8px;
+    }
+
+    .login-card h1 {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--verde);
+      margin-bottom: 32px;
+      line-height: 1.1;
+    }
+
+    .campo {
+      text-align: left;
+      margin-bottom: 18px;
+    }
+
+    .campo label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--verde-claro);
+      margin-bottom: 6px;
+    }
+
+    .campo input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--cinza);
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      outline: none;
+      transition: border-color .2s;
+      background: var(--creme);
+    }
+
+    .campo input:focus {
+      border-color: var(--verde);
+      background: var(--branco);
+    }
+
+    #btn-login {
+      width: 100%;
+      padding: 14px;
+      background: var(--verde);
+      color: var(--branco);
+      border: none;
+      border-radius: 10px;
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+      margin-top: 8px;
+    }
+
+    #btn-login:hover {
+      background: #262712;
+      transform: translateY(-2px);
+    }
+
+    #btn-login:active {
+      transform: translateY(0);
+    }
+
+    #erro-login {
+      color: var(--perigo);
+      font-size: 13px;
+      margin-top: 12px;
+      display: none;
+    }
+
+    /* ── PAINEL ── */
+    #painel {
+      display: none;
+    }
+
+    header.admin-header {
+      background: linear-gradient(90deg, var(--verde), var(--verde-claro));
+      color: white;
+      padding: 16px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, .2);
+    }
+
+    .header-titulo {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: 1px;
+    }
+
+    .header-titulo span {
+      font-size: 12px;
+      font-weight: 400;
+      opacity: .7;
+      display: block;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .header-acoes {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    #btn-sair {
+      background: rgba(255, 255, 255, .15);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, .3);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background .2s;
+    }
+
+    #btn-sair:hover {
+      background: rgba(255, 255, 255, .25);
+    }
+
+    .btn-novo {
+      background: white;
+      color: var(--verde);
+      border: none;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: transform .15s;
+    }
+
+    .btn-novo:hover {
+      transform: scale(1.04);
+    }
+
+    /* ── STATS ── */
+    .stats-bar {
+      display: flex;
+      gap: 16px;
+      padding: 24px 28px 0;
+      flex-wrap: wrap;
+    }
+
+    .stat-card {
+      background: var(--branco);
+      border: 2px solid var(--cinza);
+      border-radius: 14px;
+      padding: 18px 24px;
+      flex: 1;
+      min-width: 140px;
+    }
+
+    .stat-card .num {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 32px;
+      font-weight: 500;
+      color: var(--verde);
+    }
+
+    .stat-card .label {
+      font-size: 12px;
+      color: var(--verde-claro);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    /* ── FILTROS ── */
+    .filtros-area {
+      padding: 20px 28px 0;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filtro-input {
+      padding: 10px 16px;
+      border: 2px solid var(--cinza);
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      outline: none;
+      background: var(--branco);
+      flex: 1;
+      min-width: 200px;
+      transition: border-color .2s;
+    }
+
+    .filtro-input:focus {
+      border-color: var(--verde);
+    }
+
+    .filtro-select {
+      padding: 10px 14px;
+      border: 2px solid var(--cinza);
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      outline: none;
+      background: var(--branco);
+      cursor: pointer;
+      transition: border-color .2s;
+    }
+
+    .filtro-select:focus {
+      border-color: var(--verde);
+    }
+
+    /* ── TABELA ── */
+    .tabela-wrap {
+      padding: 20px 28px 80px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+      min-width: 680px;
+      border-collapse: collapse;
+      background: var(--branco);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, .06);
+    }
+
+    thead {
+      background: var(--verde);
+      color: white;
+    }
+
+    th {
+      font-family: 'Syne', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 16px 14px;
+      text-align: left;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--cinza);
+      transition: background .15s;
+    }
+
+    tbody tr:hover {
+      background: #f8fbf8;
+    }
+
+    tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    td {
+      padding: 14px;
+      font-size: 14px;
+      vertical-align: middle;
+    }
+
+    td img.thumb {
+      width: 56px;
+      height: 56px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 2px solid var(--cinza);
+    }
+
+    .badge-categoria {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .5px;
+    }
+
+    .badge-temperos {
+      background: #fff0d0;
+      color: #7a5000;
+    }
+
+    .badge-snacks {
+      background: #d0e8ff;
+      color: #003d7a;
+    }
+
+    .badge-farinhas {
+      background: #ffe0f0;
+      color: #7a004a;
+    }
+
+    .badge-graos {
+      background: #d0f0e8;
+      color: #00503a;
+    }
+
+    .badge-status {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .5px;
+      white-space: nowrap;
+    }
+
+    .badge-disponivel {
+      background: var(--sucesso-claro);
+      color: var(--sucesso);
+    }
+
+    .badge-indisponivel {
+      background: var(--perigo-claro);
+      color: var(--perigo);
+    }
+
+    .col-acoes {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-toggle-disp {
+      border: none;
+      border-radius: 7px;
+      padding: 6px 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform .15s, opacity .15s;
+      white-space: nowrap;
+    }
+
+    .btn-toggle-disp.marcar-indisponivel {
+      background: var(--perigo-claro);
+      color: var(--perigo);
+    }
+
+    .btn-toggle-disp.marcar-disponivel {
+      background: var(--sucesso-claro);
+      color: var(--sucesso);
+    }
+
+    .btn-toggle-disp:hover {
+      transform: scale(1.06);
+      opacity: .85;
+    }
+
+    tr.linha-indisponivel {
+      opacity: .6;
+    }
+
+    .btn-editar,
+    .btn-excluir {
+      border: none;
+      border-radius: 7px;
+      padding: 6px 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform .15s, opacity .15s;
+      white-space: nowrap;
+    }
+
+    .btn-editar {
+      background: var(--aviso-claro);
+      color: var(--aviso);
+    }
+
+    .btn-excluir {
+      background: var(--perigo-claro);
+      color: var(--perigo);
+    }
+
+    .btn-editar:hover,
+    .btn-excluir:hover {
+      transform: scale(1.06);
+      opacity: .85;
+    }
+
+    /* ── MODAL ── */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .5);
+      z-index: 500;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .overlay.aberto {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--branco);
+      border-radius: 20px;
+      padding: 36px 32px;
+      width: 100%;
+      max-width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, .25);
+      animation: slideUp .25s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--verde);
+      margin-bottom: 24px;
+    }
+
+    .form-linha {
+      margin-bottom: 18px;
+    }
+
+    .form-linha label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--verde-claro);
+      margin-bottom: 6px;
+    }
+
+    .form-linha input,
+    .form-linha select,
+    .form-linha textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border: 2px solid var(--cinza);
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      outline: none;
+      background: var(--creme);
+      transition: border-color .2s;
+      resize: vertical;
+    }
+
+    .form-linha input:focus,
+    .form-linha select:focus,
+    .form-linha textarea:focus {
+      border-color: var(--verde);
+      background: var(--branco);
+    }
+
+    /* foto upload */
+    .foto-area {
+      border: 2px dashed var(--cinza2);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+      position: relative;
+    }
+
+    .foto-area:hover {
+      border-color: var(--verde);
+      background: #f0f4f0;
+    }
+
+    .foto-area input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      border: none;
+      padding: 0;
+    }
+
+    .foto-area img.preview {
+      width: 100%;
+      max-height: 160px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .foto-area p {
+      color: var(--verde-claro);
+      font-size: 13px;
+    }
+
+    /* gramagem toggle no modal */
+    .toggle-gramas {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .toggle-gramas label {
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .toggle-gramas input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: var(--verde);
+    }
+
+    .gramas-config {
+      display: none;
+    }
+
+    .gramas-config.visivel {
+      display: block;
+    }
+
+    .duas-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .modal-botoes {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+
+    .btn-salvar {
+      flex: 1;
+      padding: 13px;
+      background: var(--verde);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+    }
+
+    .btn-salvar:hover {
+      background: #262712;
+      transform: translateY(-2px);
+    }
+
+    .btn-cancelar {
+      padding: 13px 20px;
+      background: var(--cinza);
+      color: var(--texto);
+      border: none;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background .2s;
+    }
+
+    .btn-cancelar:hover {
+      background: var(--cinza2);
+    }
+
+    /* ── TOAST ── */
+    #toast-admin {
+      position: fixed;
+      bottom: 30px;
+      right: 28px;
+      padding: 12px 22px;
+      border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s, bottom .3s;
+      z-index: 9999;
+    }
+
+    #toast-admin.mostrar {
+      opacity: 1;
+      bottom: 50px;
+    }
+
+    #toast-admin.ok {
+      background: var(--sucesso);
+      color: white;
+    }
+
+    #toast-admin.err {
+      background: var(--perigo);
+      color: white;
+    }
+
+    /* ── CONFIRM EXCLUIR ── */
+    #overlay-confirmar .modal {
+      max-width: 380px;
+    }
+
+    #overlay-confirmar h2 {
+      color: var(--perigo);
+    }
+
+    .btn-confirmar-excluir {
+      flex: 1;
+      padding: 12px;
+      background: var(--perigo);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .btn-confirmar-excluir:hover {
+      background: #8a2020;
+    }
+
+    /* Vazio */
+    .vazio {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--cinza2);
+      font-size: 15px;
+    }
+
+    @media (max-width: 600px) {
+      header.admin-header {
+        padding: 12px 16px;
+      }
+
+      .stats-bar,
+      .filtros-area {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      /* Tabela sem padding lateral — rola horizontalmente com barra visível */
+      .tabela-wrap {
+        padding-left: 0;
+        padding-right: 0;
+        padding-bottom: 80px;
+        overflow-x: scroll;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        scrollbar-color: #6b7a3a #e8ede8;
+      }
+
+      .tabela-wrap::-webkit-scrollbar {
+        height: 6px;
+      }
+
+      .tabela-wrap::-webkit-scrollbar-track {
+        background: #e8ede8;
+      }
+
+      .tabela-wrap::-webkit-scrollbar-thumb {
+        background: #6b7a3a;
+        border-radius: 3px;
+      }
+
+      table {
+        border-radius: 0;
+      }
+
+      /* Todas as colunas visíveis — rola horizontalmente */
+      th.col-descricao,
+      td.col-descricao,
+      th.col-gramagem,
+      td.col-gramagem,
+      th.col-preco,
+      td.col-preco,
+      th.col-foto,
+      td.col-foto {
+        display: table-cell;
+      }
+
+      td img.thumb {
+        width: 40px;
+        height: 40px;
+      }
+
+      .col-acoes {
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .btn-editar,
+      .btn-excluir {
+        padding: 5px 8px;
+        font-size: 11px;
+      }
+
+      .duas-col {
+        grid-template-columns: 1fr;
+      }
+
+      .header-titulo {
+        font-size: 16px;
+      }
+
+      .modal {
+        padding: 28px 20px;
+      }
+    }
+
+    #loading-admin {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      gap: 16px;
+      color: var(--verde);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+    }
+
+    #loading-admin .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #e8ede8;
+      border-top-color: var(--verde);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ════════════════════════════════════
+     TELA DE LOGIN
+     ════════════════════════════════════ -->
+  <section id="tela-login">
+    <div class="login-card">
+      <p class="logo">Grãos e Sabores</p>
+      <h1>Painel do<br>Funcionário</h1>
+      <div class="campo">
+        <label>Usuário</label>
+        <input type="text" id="campo-usuario" placeholder="seu usuário" autocomplete="username">
+      </div>
+      <div class="campo">
+        <label>Senha</label>
+        <input type="password" id="campo-senha" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button id="btn-login">Entrar →</button>
+      <p id="erro-login">Usuário ou senha incorretos.</p>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════
+     PAINEL ADMIN
+     ════════════════════════════════════ -->
+  <div id="painel">
+    <header class="admin-header">
+      <div class="header-titulo">
+        Painel Admin
+        <span>Grãos e Sabores</span>
+      </div>
+      <div class="header-acoes">
+        <button class="btn-novo" id="btn-abrir-novo">+ Novo Produto</button>
+        <button id="btn-sair">Sair</button>
+      </div>
+    </header>
+
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="num" id="stat-total">0</div>
+        <div class="label">Total de Produtos</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="stat-temperos">0</div>
+        <div class="label">Temperos</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="stat-snacks">0</div>
+        <div class="label">Snacks</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="stat-farinhas">0</div>
+        <div class="label">Farinhas</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="stat-graos">0</div>
+        <div class="label">Grãos</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="stat-indisponiveis" style="color:var(--perigo)">0</div>
+        <div class="label">Indisponíveis</div>
+      </div>
+    </div>
+
+    <div class="filtros-area">
+      <input type="text" class="filtro-input" id="filtro-busca" placeholder="🔎 Buscar produto...">
+      <select class="filtro-select" id="filtro-categoria">
+        <option value="">Todas as categorias</option>
+        <option value="temperos">Temperos</option>
+        <option value="snacks">Snacks</option>
+        <option value="farinhas">Farinhas Energéticas</option>
+        <option value="graos">Grãos e Sementes</option>
+      </select>
+    </div>
+
+    <div class="tabela-wrap">
+      <div id="loading-admin">
+        <div class="loading-spinner"></div>
+        <p>Carregando produtos...</p>
+      </div>
+
+      <table id="tabela-produtos">
+        <thead>
+          <tr>
+            <th class="col-foto">Foto</th>
+            <th>Nome</th>
+            <th>Categoria</th>
+            <th class="col-descricao">Descrição</th>
+            <th class="col-gramagem">Gramagem</th>
+            <th class="col-preco">Preço</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="corpo-tabela"></tbody>
+      </table>
+      <p class="vazio" id="msg-vazio" style="display:none">Nenhum produto encontrado.</p>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════
+     MODAL — CRIAR / EDITAR
+     ════════════════════════════════════ -->
+  <div class="overlay" id="overlay-form">
+    <div class="modal">
+      <h2 id="modal-titulo">Novo Produto</h2>
+
+      <div class="form-linha">
+        <label>Nome do Produto *</label>
+        <input type="text" id="f-nome" placeholder="Ex: Colorau">
+      </div>
+
+      <div class="form-linha">
+        <label>Categoria *</label>
+        <select id="f-categoria">
+          <option value="">Selecione...</option>
+          <option value="temperos">Temperos</option>
+          <option value="snacks">Snacks</option>
+          <option value="farinhas">Farinhas Energéticas</option>
+          <option value="graos">Grãos e Sementes</option>
+        </select>
+      </div>
+
+      <div class="form-linha">
+        <label>Descrição curta</label>
+        <input type="text" id="f-descricao" placeholder="Ex: Cor intensa natural">
+      </div>
+
+      <div class="form-linha">
+        <label>Informação detalhada (tooltip)</label>
+        <textarea id="f-info" rows="3" placeholder="Texto que aparece no ⋮ do produto..."></textarea>
+      </div>
+
+      <!-- FOTO -->
+      <div class="form-linha">
+        <label>Foto do Produto</label>
+        <div class="foto-area" id="drop-foto">
+          <input type="file" id="f-foto" accept="image/*">
+          <img class="preview" id="preview-foto" style="display:none">
+          <p id="hint-foto">📷 Clique ou arraste uma imagem aqui</p>
+        </div>
+      </div>
+
+      <!-- GRAMAGEM -->
+      <div class="toggle-gramas">
+        <input type="checkbox" id="f-tem-seletor">
+        <label for="f-tem-seletor">Produto tem seletor de gramagem (50g / 100g)?</label>
+      </div>
+
+      <div class="gramas-config" id="gramas-config">
+        <!-- com seletor -->
+        <div class="duas-col">
+          <div class="form-linha">
+            <label>Preço p/ 100g (R$) *</label>
+            <input type="number" id="f-preco100" step="0.01" placeholder="0,00">
+          </div>
+          <div class="form-linha">
+            <label>Gramagem padrão inicial</label>
+            <select id="f-grama-padrao">
+              <option value="50">50g</option>
+              <option value="100">100g</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div id="sem-seletor-config">
+        <!-- sem seletor -->
+        <div class="duas-col">
+          <div class="form-linha">
+            <label>Gramagem (g) *</label>
+            <input type="number" id="f-gramas" placeholder="Ex: 100">
+          </div>
+          <div class="form-linha">
+            <label>Preço (R$) *</label>
+            <input type="number" id="f-preco" step="0.01" placeholder="0,00">
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-botoes">
+        <button class="btn-salvar" id="btn-salvar-produto">Salvar Produto</button>
+        <button class="btn-cancelar" id="btn-cancelar-form">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════
+     MODAL — CONFIRMAR EXCLUSÃO
+     ════════════════════════════════════ -->
+  <div class="overlay" id="overlay-confirmar">
+    <div class="modal">
+      <h2>Excluir Produto?</h2>
+      <p id="nome-excluir" style="margin-bottom:20px; font-size:15px;"></p>
+      <p style="color:#666; font-size:13px;">Esta ação não pode ser desfeita. O produto sumirá do site imediatamente.
+      </p>
+      <div class="modal-botoes">
+        <button class="btn-confirmar-excluir" id="btn-confirmar-excluir">Sim, excluir</button>
+        <button class="btn-cancelar" id="btn-cancelar-excluir">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast-admin"></div>
+
+  <script src="config.js"></script>
+<script src="config.local.js"></script>
+<script>
+    // ════════════════════════════════════════════════════════
+    // CONFIGURAÇÕES
+    // ════════════════════════════════════════════════════════
+    const USUARIO = (window.APP_CONFIG || {}).ADMIN_USUARIO;
+    const SENHA = (window.APP_CONFIG || {}).ADMIN_SENHA;
+    const STORAGE_KEY = "gs_produtos";
+    const JSONBIN_ID = (window.APP_CONFIG || {}).JSONBIN_ID;
+    const JSONBIN_KEY = (window.APP_CONFIG || {}).JSONBIN_KEY;
+
+    // ════════════════════════════════════════════════════════
+    // PRODUTOS PADRÃO (carregados do index.html original)
+    // ════════════════════════════════════════════════════════
+    const PRODUTOS_PADRAO = [
+      // Temperos
+      { id: 1, nome: "Colorau", categoria: "temperos", descricao: "Cor intensa natural", info: "É um tempero versátil, ideal para realçar o sabor de frango, caldos, ensopados e outros pratos.", foto: "imagens/Colorau, Paprica doce, Paprica defumada.jpg", temSeletor: false, gramas: 100, preco: 6.99 },
+      { id: 2, nome: "Edu Guedes", categoria: "temperos", descricao: "Sabor caseiro elegante", info: "Mistura exclusiva de temperos que realça o sabor dos seus pratos, trazendo praticidade e um toque caseiro irresistível à sua cozinha.", foto: "imagens/Edu guedes.webp", temSeletor: false, gramas: 65, preco: 6.99 },
+      { id: 3, nome: "Ana Maria", categoria: "temperos", descricao: "Tempero tradicional brasileiro", info: "Mistura tradicional de temperos que valoriza o sabor dos seus pratos, garantindo praticidade e aquele toque caseiro que todos adoram.", foto: "imagens/Ana maria.webp", temSeletor: false, gramas: 65, preco: 6.99 },
+      { id: 4, nome: "Lemon Pepper", categoria: "temperos", descricao: "Toque limão apimentado", info: "Combinação cítrica e picante que realça o sabor dos pratos, trazendo frescor e um toque sofisticado à sua cozinha.", foto: "imagens/Lemon Peper.png", temSeletor: false, gramas: 80, preco: 6.99 },
+      { id: 5, nome: "Páprica Defumada", categoria: "temperos", descricao: "Toque defumado especial", info: "Tempero com sabor defumado intenso que adiciona cor e personalidade aos seus pratos, deixando cada receita irresistivelmente aromática.", foto: "imagens/Colorau, Paprica doce, Paprica defumada.jpg", temSeletor: false, gramas: 100, preco: 6.99 },
+      { id: 6, nome: "Páprica Doce", categoria: "temperos", descricao: "Doçura natural equilibrada", info: "Tempero suave e adocicado que realça a cor e o sabor dos pratos, trazendo delicadeza e aroma irresistível à sua cozinha.", foto: "imagens/Colorau, Paprica doce, Paprica defumada.jpg", temSeletor: false, gramas: 100, preco: 6.99 },
+      { id: 7, nome: "Tempero Completo", categoria: "temperos", descricao: "Mistura completo equilibrada", info: "Mistura equilibrada de especiarias que valoriza todos os sabores dos seus pratos, garantindo praticidade e sabor caseiro em cada refeição.", foto: "imagens/Tempero Completoo.webp", temSeletor: false, gramas: 65, preco: 6.99 },
+      { id: 8, nome: "Chimichurri", categoria: "temperos", descricao: "Ervas frescas marcantes", info: "Mistura de ervas e especiarias que oferece sabor intenso e fresco, perfeita para temperar carnes, grelhados e realçar qualquer prato com toque argentino autêntico.", foto: "imagens/Chimichurri.png", temSeletor: false, gramas: 65, preco: 6.99 },
+      { id: 9, nome: "Ajinomoto", categoria: "temperos", descricao: "Realce gostoso imediato", info: "Realçador de sabor que intensifica o gosto natural dos alimentos, trazendo um toque delicioso e equilibrado a todos os pratos.", foto: "imagens/Ajinomoto.jpg", temSeletor: false, gramas: 100, preco: 6.99 },
+      { id: 10, nome: "Orégano", categoria: "temperos", descricao: "Essência natural marcante", info: "Erva aromática que adiciona sabor mediterrâneo autêntico aos pratos, trazendo frescor e um toque especial à sua culinária.", foto: "imagens/Oregano.jpg", temSeletor: false, gramas: 20, preco: 6.99 },
+      { id: 11, nome: "Tempero para Feijão", categoria: "temperos", descricao: "Tempero clássico diário", info: "Mistura especial de temperos que realça o sabor do feijão.", foto: "imagens/Tempero para feijao.webp", temSeletor: false, gramas: 65, preco: 6.99 },
+      { id: 12, nome: "Cebola, Salsa e Alho", categoria: "temperos", descricao: "Toque culinário especial", info: "Mistura de temperos frescos que adiciona aroma e sabor irresistível aos pratos, trazendo praticidade e aquele toque caseiro especial.", foto: "imagens/cebola, salsa e alho.png", temSeletor: false, gramas: 50, preco: 6.99 },
+      { id: 13, nome: "Açafrão", categoria: "temperos", descricao: "Cor vibrante natural", info: "Tempero de cor vibrante e sabor marcante que valoriza seus pratos, trazendo um toque exótico e sofisticado à sua culinária.", foto: "imagens/Acafrao.jpg", temSeletor: false, gramas: 80, preco: 6.99 },
+      { id: 14, nome: "Tempero Vinagrete", categoria: "temperos", descricao: "Toque refrescante caseiro", info: "Mistura cítrica e aromática que realça saladas e pratos leves, trazendo frescor, sabor equilibrado e praticidade à sua cozinha.", foto: "imagens/vinagrete.jpg", temSeletor: false, gramas: 50, preco: 6.99 },
+      { id: 15, nome: "Pega Marido", categoria: "temperos", descricao: "Mistura especial envolvente", info: "Tempero irresistível que combina aromas e sabores marcantes, deixando seus pratos deliciosos e irresistíveis para toda a família.", foto: "imagens/Pega Marido.png", temSeletor: false, gramas: 65, preco: 6.99 },
+      // Snacks
+      { id: 16, nome: "Mix de Vegetais Desidratados", categoria: "snacks", descricao: "Essência nutritiva saborosa", info: "Combinação prática de vegetais desidratados que adiciona sabor, aroma e cor aos seus pratos, trazendo nutrição e praticidade à sua cozinha.", foto: "imagens/mix de vegetais desidratados.png", temSeletor: false, gramas: 150, preco: 23.00 },
+      { id: 17, nome: "Banana Chips", categoria: "snacks", descricao: "Sabor tropical irresistível", info: "Deliciosas fatias de banana crocantes e naturais, perfeitas para lanches saudáveis e saborosos a qualquer hora do dia.", foto: "imagens/banana chips.png", temSeletor: false, gramas: 150, preco: 16.50 },
+      { id: 18, nome: "Mix de Frutas", categoria: "snacks", descricao: "Energia natural", info: "O mix de frutas é uma combinação equilibrada de frutas selecionadas, oferecendo sabor natural, frescor e alto valor nutricional.", foto: "imagens/Mix de frutas.jpg", temSeletor: false, gramas: 150, preco: 24.99 },
+      // Farinhas
+      { id: 19, nome: "Farinha de Aveia", categoria: "farinhas", descricao: "Energia prolongada", info: "Farinha de aveia integral de alta qualidade.", foto: "imagens/farinha de aveia.png", temSeletor: true, preco100: 12.90, gramaPadrao: 100 },
+      { id: 20, nome: "Farinha de Amendoim", categoria: "farinhas", descricao: "Proteína saborosa", info: "Farinha de amendoim torrado, rica em proteínas.", foto: "imagens/farinha de amendoim.jpg", temSeletor: true, preco100: 15.90, gramaPadrao: 100 },
+      // Grãos
+      { id: 21, nome: "Semente de Abóbora Torrada", categoria: "graos", descricao: "Crocante nutritiva", info: "A semente de abóbora torrada é um alimento nutritivo e saboroso, obtido das sementes da Abóbora, cuidadosamente torradas para realçar o sabor e a crocância.", foto: "imagens/Semente de abobora torrada.jpg", temSeletor: true, preco100: 10.49, gramaPadrao: 50 },
+      { id: 22, nome: "Semente de Girassol", categoria: "graos", descricao: "Energia natural", info: "A semente de girassol é um alimento nutritivo e versátil, extraído da flor do Girassol, muito consumida como snack saudável.", foto: "imagens/Semente de girassol.webp", temSeletor: true, preco100: 6.49, gramaPadrao: 50 },
+      { id: 23, nome: "Linhaça Dourada", categoria: "graos", descricao: "Nutrição funcional", info: "A linhaça dourada é uma semente altamente nutritiva proveniente da planta Linhaça, muito valorizada por seus benefícios à saúde e versatilidade no consumo.", foto: "imagens/Linhaca dourada.png", temSeletor: true, preco100: 5.90, gramaPadrao: 50 },
+      { id: 24, nome: "Semente de Chia Premium", categoria: "graos", descricao: "Superalimento natural", info: "A semente de chia premium é um alimento altamente nutritivo proveniente da planta Chia, conhecida por seu perfil rico em nutrientes e benefícios para a saúde.", foto: "imagens/Semente de Chia Premium.webp", temSeletor: true, preco100: 9.49, gramaPadrao: 50 },
+      { id: 25, nome: "Semente Gergelim Preto", categoria: "graos", descricao: "Nutrição intensa", info: "A semente de gergelim preto é um alimento nutritivo e tradicional, proveniente da planta Gergelim, muito valorizada na culinária e na alimentação saudável.", foto: "imagens/Semente Gergelim Preto.webp", temSeletor: true, preco100: 8.49, gramaPadrao: 50 },
+      { id: 26, nome: "Mix Salada", categoria: "graos", descricao: "Crocância saudável", info: "O mix salada é uma combinação prática e nutritiva de sementes e ingredientes selecionados, ideal para complementar refeições com mais sabor e valor nutricional.", foto: "imagens/Mix salada.webp", temSeletor: true, preco100: 13.49, gramaPadrao: 50 },
+    ];
+
+    // ════════════════════════════════════════════════════════
+    // ESTADO
+    // ════════════════════════════════════════════════════════
+    let produtos = [];
+    let nextId = 100;
+    let editandoId = null;
+    let excluindoId = null;
+    let fotoBase64Atual = null;
+
+    async function carregar() {
+      const loadingAdmin = document.getElementById("loading-admin");
+      const tabela = document.getElementById("tabela-produtos");
+      if (loadingAdmin) { loadingAdmin.style.display = "flex"; }
+      if (tabela) { tabela.style.display = "none"; }
+
+      try {
+        const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
+          headers: { "X-Master-Key": JSONBIN_KEY }
+        });
+        const data = await res.json();
+        const lista = data.record;
+        if (Array.isArray(lista) && lista.length > 0 && lista[0].id) {
+          produtos = lista;
+          nextId = Math.max(...produtos.map(p => p.id), 99) + 1;
+        } else {
+          produtos = JSON.parse(JSON.stringify(PRODUTOS_PADRAO));
+          nextId = 200;
+          await salvar();
+        }
+      } catch (e) {
+        console.error("Erro ao carregar JSONBin:", e);
+        produtos = JSON.parse(JSON.stringify(PRODUTOS_PADRAO));
+        nextId = 200;
+      }
+
+      if (loadingAdmin) { loadingAdmin.style.display = "none"; }
+      if (tabela) { tabela.style.display = "table"; }
+      renderizar();
+    }
+
+    async function salvar() {
+      try {
+        await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Master-Key": JSONBIN_KEY
+          },
+          body: JSON.stringify(produtos)
+        });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(produtos));
+      } catch (e) {
+        console.error("Erro ao salvar JSONBin:", e);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(produtos));
+      }
+    }
+
+    // ════════════════════════════════════════════════════════
+    // LOGIN
+    // ════════════════════════════════════════════════════════
+    document.getElementById("btn-login").addEventListener("click", login);
+    document.getElementById("campo-senha").addEventListener("keydown", e => { if (e.key === "Enter") login(); });
+
+    function login() {
+      const u = document.getElementById("campo-usuario").value.trim();
+      const s = document.getElementById("campo-senha").value.trim();
+      if (u === USUARIO && s === SENHA) {
+        document.getElementById("tela-login").style.display = "none";
+        document.getElementById("painel").style.display = "block";
+        sessionStorage.setItem("gs_admin", "true");
+        carregar();
+      } else {
+        document.getElementById("erro-login").style.display = "block";
+      }
+    }
+
+    document.getElementById("btn-sair").addEventListener("click", () => {
+      sessionStorage.removeItem("gs_admin");
+      document.getElementById("painel").style.display = "none";
+      document.getElementById("tela-login").style.display = "flex";
+      document.getElementById("campo-usuario").value = "";
+      document.getElementById("campo-senha").value = "";
+      document.getElementById("erro-login").style.display = "none";
+    });
+
+    // ════════════════════════════════════════════════════════
+    // RENDERIZAR TABELA
+    // ════════════════════════════════════════════════════════
+    const nomeCategoria = { temperos: "Temperos", snacks: "Snacks", farinhas: "Farinhas Energéticas", graos: "Grãos e Sementes" };
+
+    function renderizar() {
+      const busca = document.getElementById("filtro-busca").value.toLowerCase();
+      const cat = document.getElementById("filtro-categoria").value;
+
+      const filtrados = produtos.filter(p => {
+        const matchNome = p.nome.toLowerCase().includes(busca);
+        const matchCat = cat === "" || p.categoria === cat;
+        return matchNome && matchCat;
+      });
+
+      const tbody = document.getElementById("corpo-tabela");
+      tbody.innerHTML = "";
+
+      if (filtrados.length === 0) {
+        document.getElementById("msg-vazio").style.display = "block";
+        document.querySelector("table").style.display = "none";
+      } else {
+        document.getElementById("msg-vazio").style.display = "none";
+        document.querySelector("table").style.display = "table";
+
+        filtrados.forEach(p => {
+          const tr = document.createElement("tr");
+
+          // foto
+          const fotoSrc = p.foto || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56'%3E%3Crect width='56' height='56' fill='%23e8ede8'/%3E%3Ctext x='28' y='34' font-size='20' text-anchor='middle'%3E📦%3C/text%3E%3C/svg%3E";
+
+          // gramagem
+          let gramagemTexto;
+          if (p.temSeletor) {
+            gramagemTexto = `<span style="font-size:12px">50g / 100g<br><small style="color:#999">seletor ativo</small></span>`;
+          } else {
+            gramagemTexto = `${p.gramas}g`;
+          }
+
+          // preço
+          let precoTexto;
+          if (p.temSeletor) {
+            const p50 = (p.preco100 / 2).toFixed(2).replace(".", ",");
+            const p100 = parseFloat(p.preco100).toFixed(2).replace(".", ",");
+            precoTexto = `<span style="font-size:12px">50g → R$ ${p50}<br>100g → R$ ${p100}</span>`;
+          } else {
+            precoTexto = `R$ ${parseFloat(p.preco).toFixed(2).replace(".", ",")}`;
+          }
+
+          // disponibilidade (produtos antigos sem o campo são considerados disponíveis)
+          const disponivel = p.disponivel !== false;
+          const statusTexto = disponivel
+            ? '<span class="badge-status badge-disponivel">✅ Disponível</span>'
+            : '<span class="badge-status badge-indisponivel">🚫 Indisponível</span>';
+          const btnToggleTexto = disponivel
+            ? '<button class="btn-toggle-disp marcar-indisponivel" data-id="' + p.id + '">🚫 Indisponibilizar</button>'
+            : '<button class="btn-toggle-disp marcar-disponivel" data-id="' + p.id + '">✅ Disponibilizar</button>';
+
+          if (!disponivel) tr.classList.add("linha-indisponivel");
+
+          tr.innerHTML = `
+        <td class="col-foto"><img class="thumb" src="${fotoSrc}" alt="${p.nome}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'56\\' height=\\'56\\'%3E%3Crect width=\\'56\\' height=\\'56\\' fill=\\'%23e8ede8\\'/%3E%3Ctext x=\\'28\\' y=\\'34\\' font-size=\\'20\\' text-anchor=\\'middle\\'%3E📦%3C/text%3E%3C/svg%3E'"></td>
+        <td><strong>${p.nome}</strong></td>
+        <td><span class="badge-categoria badge-${p.categoria}">${nomeCategoria[p.categoria] || p.categoria}</span></td>
+        <td class="col-descricao" style="max-width:180px;font-size:13px;color:#666">${p.descricao || "—"}</td>
+        <td class="col-gramagem">${gramagemTexto}</td>
+        <td class="col-preco">${precoTexto}</td>
+        <td>${statusTexto}</td>
+        <td>
+          <div class="col-acoes">
+            <button class="btn-editar" data-id="${p.id}">✏️ Editar</button>
+            ${btnToggleTexto}
+            <button class="btn-excluir" data-id="${p.id}">🗑 Excluir</button>
+          </div>
+        </td>
+      `;
+          tbody.appendChild(tr);
+        });
+
+        // Eventos dos botões da tabela
+        tbody.querySelectorAll(".btn-editar").forEach(b => b.addEventListener("click", () => abrirEditar(parseInt(b.dataset.id))));
+        tbody.querySelectorAll(".btn-excluir").forEach(b => b.addEventListener("click", () => abrirExcluir(parseInt(b.dataset.id))));
+        tbody.querySelectorAll(".btn-toggle-disp").forEach(b => b.addEventListener("click", () => alternarDisponibilidade(parseInt(b.dataset.id))));
+      }
+
+      // Stats
+      document.getElementById("stat-total").textContent = produtos.length;
+      document.getElementById("stat-temperos").textContent = produtos.filter(p => p.categoria === "temperos").length;
+      document.getElementById("stat-snacks").textContent = produtos.filter(p => p.categoria === "snacks").length;
+      document.getElementById("stat-farinhas").textContent = produtos.filter(p => p.categoria === "farinhas").length;
+      document.getElementById("stat-graos").textContent = produtos.filter(p => p.categoria === "graos").length;
+      document.getElementById("stat-indisponiveis").textContent = produtos.filter(p => p.disponivel === false).length;
+    }
+
+    document.getElementById("filtro-busca").addEventListener("input", renderizar);
+    document.getElementById("filtro-categoria").addEventListener("change", renderizar);
+
+    // ════════════════════════════════════════════════════════
+    // MODAL FORM — ABRIR / FECHAR
+    // ════════════════════════════════════════════════════════
+    const overlayForm = document.getElementById("overlay-form");
+
+    function limparForm() {
+      document.getElementById("f-nome").value = "";
+      document.getElementById("f-categoria").value = "";
+      document.getElementById("f-descricao").value = "";
+      document.getElementById("f-info").value = "";
+      document.getElementById("f-gramas").value = "";
+      document.getElementById("f-preco").value = "";
+      document.getElementById("f-preco100").value = "";
+      document.getElementById("f-grama-padrao").value = "50";
+      document.getElementById("f-tem-seletor").checked = false;
+      document.getElementById("preview-foto").style.display = "none";
+      document.getElementById("hint-foto").style.display = "block";
+      document.getElementById("gramas-config").classList.remove("visivel");
+      document.getElementById("sem-seletor-config").style.display = "block";
+      fotoBase64Atual = null;
+    }
+
+    document.getElementById("btn-abrir-novo").addEventListener("click", () => {
+      editandoId = null;
+      limparForm();
+      document.getElementById("modal-titulo").textContent = "Novo Produto";
+      overlayForm.classList.add("aberto");
+    });
+
+    document.getElementById("btn-cancelar-form").addEventListener("click", () => overlayForm.classList.remove("aberto"));
+    overlayForm.addEventListener("click", e => { if (e.target === overlayForm) overlayForm.classList.remove("aberto"); });
+
+    // Toggle seletor de gramas
+    document.getElementById("f-tem-seletor").addEventListener("change", function () {
+      document.getElementById("gramas-config").classList.toggle("visivel", this.checked);
+      document.getElementById("sem-seletor-config").style.display = this.checked ? "none" : "block";
+    });
+
+    // ════════════════════════════════════════════════════════
+    // FOTO — UPLOAD CLOUDINARY
+    // ════════════════════════════════════════════════════════
+    const CLOUDINARY_CLOUD = (window.APP_CONFIG || {}).CLOUDINARY_CLOUD;
+    const CLOUDINARY_PRESET = (window.APP_CONFIG || {}).CLOUDINARY_PRESET;
+
+    document.getElementById("f-foto").addEventListener("change", async function () {
+      const file = this.files[0];
+      if (!file) return;
+
+      // Preview imediato enquanto faz upload
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = document.getElementById("preview-foto");
+        img.src = e.target.result;
+        img.style.display = "block";
+        document.getElementById("hint-foto").style.display = "none";
+      };
+      reader.readAsDataURL(file);
+
+      // Upload para o Cloudinary
+      toast("Enviando imagem...", "ok");
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", CLOUDINARY_PRESET);
+
+        const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {
+          method: "POST",
+          body: formData
+        });
+
+        if (!res.ok) throw new Error("Falha no upload");
+
+        const data = await res.json();
+        // Salva a URL otimizada do Cloudinary
+        fotoBase64Atual = `https://res.cloudinary.com/${CLOUDINARY_CLOUD}/image/upload/w_600,h_600,c_fill,f_auto,q_auto/${data.public_id}`;
+        toast("Imagem enviada com sucesso!", "ok");
+      } catch (err) {
+        console.error("Erro Cloudinary:", err);
+        toast("Erro ao enviar imagem. Tente novamente.", "err");
+        fotoBase64Atual = null;
+      }
+    });
+
+    // ════════════════════════════════════════════════════════
+    // ABRIR EDITAR
+    // ════════════════════════════════════════════════════════
+    function abrirEditar(id) {
+      const p = produtos.find(x => x.id === id);
+      if (!p) return;
+      editandoId = id;
+      limparForm();
+
+      document.getElementById("modal-titulo").textContent = "Editar Produto";
+      document.getElementById("f-nome").value = p.nome;
+      document.getElementById("f-categoria").value = p.categoria;
+      document.getElementById("f-descricao").value = p.descricao || "";
+      document.getElementById("f-info").value = p.info || "";
+
+      if (p.foto) {
+        const img = document.getElementById("preview-foto");
+        img.src = p.foto;
+        img.style.display = "block";
+        document.getElementById("hint-foto").style.display = "none";
+        fotoBase64Atual = p.foto;
+      }
+
+      if (p.temSeletor) {
+        document.getElementById("f-tem-seletor").checked = true;
+        document.getElementById("gramas-config").classList.add("visivel");
+        document.getElementById("sem-seletor-config").style.display = "none";
+        document.getElementById("f-preco100").value = p.preco100 || "";
+        document.getElementById("f-grama-padrao").value = p.gramaPadrao || "50";
+      } else {
+        document.getElementById("f-gramas").value = p.gramas || "";
+        document.getElementById("f-preco").value = p.preco || "";
+      }
+
+      overlayForm.classList.add("aberto");
+    }
+
+    // ════════════════════════════════════════════════════════
+    // SALVAR PRODUTO
+    // ════════════════════════════════════════════════════════
+    document.getElementById("btn-salvar-produto").addEventListener("click", () => {
+      const nome = document.getElementById("f-nome").value.trim();
+      const categoria = document.getElementById("f-categoria").value;
+      const descricao = document.getElementById("f-descricao").value.trim();
+      const info = document.getElementById("f-info").value.trim();
+      const temSeletor = document.getElementById("f-tem-seletor").checked;
+
+      if (!nome) { toast("Informe o nome do produto.", "err"); return; }
+      if (!categoria) { toast("Selecione a categoria.", "err"); return; }
+
+      let dadosGrama = {};
+      if (temSeletor) {
+        const preco100 = parseFloat(document.getElementById("f-preco100").value);
+        if (isNaN(preco100) || preco100 <= 0) { toast("Informe o preço por 100g.", "err"); return; }
+        dadosGrama = { temSeletor: true, preco100, gramaPadrao: document.getElementById("f-grama-padrao").value };
+      } else {
+        const gramas = parseInt(document.getElementById("f-gramas").value);
+        const preco = parseFloat(document.getElementById("f-preco").value);
+        if (!gramas || gramas <= 0) { toast("Informe a gramagem.", "err"); return; }
+        if (isNaN(preco) || preco <= 0) { toast("Informe o preço.", "err"); return; }
+        dadosGrama = { temSeletor: false, gramas, preco };
+      }
+
+      const foto = fotoBase64Atual || (editandoId ? (produtos.find(p => p.id === editandoId)?.foto || "") : "");
+
+      if (editandoId !== null) {
+        const idx = produtos.findIndex(p => p.id === editandoId);
+        if (idx !== -1) {
+          produtos[idx] = { ...produtos[idx], nome, categoria, descricao, info, foto, ...dadosGrama };
+          toast("Produto atualizado com sucesso!", "ok");
+        }
+      } else {
+        produtos.push({ id: nextId++, nome, categoria, descricao, info, foto, disponivel: true, ...dadosGrama });
+        toast("Produto adicionado com sucesso!", "ok");
+      }
+
+      salvar();
+      renderizar();
+      overlayForm.classList.remove("aberto");
+      editandoId = null;
+    });
+
+    // ════════════════════════════════════════════════════════
+    // DISPONIBILIDADE
+    // ════════════════════════════════════════════════════════
+    function alternarDisponibilidade(id) {
+      const idx = produtos.findIndex(p => p.id === id);
+      if (idx === -1) return;
+
+      const estavaDisponivel = produtos[idx].disponivel !== false;
+      produtos[idx].disponivel = !estavaDisponivel;
+
+      salvar();
+      renderizar();
+
+      toast(
+        produtos[idx].disponivel
+          ? `"${produtos[idx].nome}" marcado como disponível.`
+          : `"${produtos[idx].nome}" marcado como indisponível.`,
+        "ok"
+      );
+    }
+
+    // ════════════════════════════════════════════════════════
+    // EXCLUIR
+    // ════════════════════════════════════════════════════════
+    const overlayConfirmar = document.getElementById("overlay-confirmar");
+
+    function abrirExcluir(id) {
+      const p = produtos.find(x => x.id === id);
+      if (!p) return;
+      excluindoId = id;
+      document.getElementById("nome-excluir").textContent = p.nome;
+      overlayConfirmar.classList.add("aberto");
+    }
+
+    document.getElementById("btn-confirmar-excluir").addEventListener("click", () => {
+      produtos = produtos.filter(p => p.id !== excluindoId);
+      salvar();
+      renderizar();
+      overlayConfirmar.classList.remove("aberto");
+      toast("Produto excluído.", "ok");
+      excluindoId = null;
+    });
+
+    document.getElementById("btn-cancelar-excluir").addEventListener("click", () => overlayConfirmar.classList.remove("aberto"));
+    overlayConfirmar.addEventListener("click", e => { if (e.target === overlayConfirmar) overlayConfirmar.classList.remove("aberto"); });
+
+    // ════════════════════════════════════════════════════════
+    // TOAST
+    // ════════════════════════════════════════════════════════
+    function toast(msg, tipo = "ok") {
+      const el = document.getElementById("toast-admin");
+      el.textContent = msg;
+      el.className = `mostrar ${tipo}`;
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => { el.className = ""; }, 2800);
+    }
+    // Verifica sessão ao carregar a página (F5 mantém logado, fechar aba desloga)
+    if (sessionStorage.getItem("gs_admin") === "true") {
+      document.getElementById("tela-login").style.display = "none";
+      document.getElementById("painel").style.display = "block";
+      carregar();
+    }
+  </script>
+</body>
+
+</html>
